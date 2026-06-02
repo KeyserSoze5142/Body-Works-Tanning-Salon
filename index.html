@@ -53,25 +53,36 @@ h2.title{font-size:clamp(2rem,5.5vw,3.3rem);font-weight:900;letter-spacing:-.01e
 .burger.open span:nth-child(2){opacity:0}
 .burger.open span:nth-child(3){transform:translateY(-8px) rotate(-45deg)}
 
-/* ---- MOBILE NAV: scrollable dropdown panel BELOW the header (fixes cut-off) ---- */
+/* Mobile: hide desktop inline nav */
 @media(max-width:860px){
   .burger{display:flex}
-  .nav-links{
-    position:fixed; top:72px; left:0; right:0; bottom:0;
-    flex-direction:column; justify-content:flex-start; align-items:stretch;
-    gap:8px; background:var(--cream);
-    padding:22px 22px calc(40px + env(safe-area-inset-bottom,0px));
-    overflow-y:auto; -webkit-overflow-scrolling:touch;
-    transform:translateX(100%);
-    transition:transform .32s cubic-bezier(.4,0,.2,1);
-    z-index:49; box-shadow:var(--shadow);
-  }
-  .nav-links.open{transform:translateX(0)}
-  .nav-links li{width:100%;list-style:none}
-  .nav-links a{display:block;text-align:center;font-size:1.3rem;font-family:var(--fd);font-weight:700;padding:.65em 1em;border-radius:14px}
-  .nav-cta{margin:8px 0 0}
-  .nav-cta .btn{width:100%;justify-content:center;font-size:1.1rem}
+  .nav-links{display:none !important}
 }
+/* ---- MOBILE OVERLAY: sibling of <header>, NOT inside backdrop-filter element ---- */
+.mob-menu{
+  display:none;
+  position:fixed;top:72px;left:0;right:0;bottom:0;
+  flex-direction:column;justify-content:flex-start;align-items:stretch;
+  gap:4px;background:var(--cream);
+  padding:24px 24px calc(40px + env(safe-area-inset-bottom,0px));
+  overflow-y:auto;-webkit-overflow-scrolling:touch;
+  transform:translateX(110%);
+  transition:transform .3s cubic-bezier(.4,0,.2,1);
+  z-index:9999;box-shadow:-4px 0 30px rgba(42,23,12,.15);
+}
+@media(max-width:860px){.mob-menu{display:flex}}
+.mob-menu.open{transform:translateX(0)}
+.mob-menu .mob-link{
+  display:block;text-align:center;width:100%;
+  font-size:1.3rem;font-family:var(--fd);font-weight:700;
+  padding:.7em 1em;border-radius:14px;
+  color:var(--ink-soft);background:none;border:none;cursor:pointer;
+  transition:color .15s,background .15s;
+  touch-action:manipulation;-webkit-tap-highlight-color:rgba(255,106,77,.12);
+}
+.mob-menu .mob-link:hover,.mob-menu .mob-link.active{color:var(--ink);background:rgba(255,179,39,.18)}
+.mob-menu .mob-cta{margin-top:12px}
+.mob-menu .mob-cta .btn{width:100%;justify-content:center;font-size:1.1rem;touch-action:manipulation}
 
 .page{display:none}.page.active{display:block;animation:fade .4s ease}
 @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
@@ -225,18 +236,28 @@ h2.title{font-size:clamp(2rem,5.5vw,3.3rem);font-weight:900;letter-spacing:-.01e
 
 <header class="nav">
   <div class="wrap nav-inner">
-    <a class="brand" data-nav="home"><span class="dot"></span><span>Body Works<small>Tanning &middot; Tuscaloosa</small></span></a>
+    <a href="#" class="brand" data-nav="home"><span class="dot"></span><span>Body Works<small>Tanning &middot; Tuscaloosa</small></span></a>
     <button class="burger" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
     <ul class="nav-links">
-      <li><a data-nav="home" class="active">Home</a></li>
-      <li><a data-nav="services">Services</a></li>
-      <li><a data-nav="products">Products</a></li>
-      <li><a data-nav="about">About</a></li>
-      <li><a data-nav="contact">Contact</a></li>
-      <li class="nav-cta"><a class="btn btn-sun" data-nav="contact">Visit Us</a></li>
+      <li><a href="#" data-nav="home" class="active">Home</a></li>
+      <li><a href="#" data-nav="services">Services</a></li>
+      <li><a href="#" data-nav="products">Products</a></li>
+      <li><a href="#" data-nav="about">About</a></li>
+      <li><a href="#" data-nav="contact">Contact</a></li>
+      <li class="nav-cta"><a href="#" class="btn btn-sun" data-nav="contact">Visit Us</a></li>
     </ul>
   </div>
 </header>
+
+<!-- Mobile nav overlay: must live here as <body> sibling, NOT inside the nav with backdrop-filter -->
+<div class="mob-menu" id="mobMenu" role="navigation" aria-label="Mobile navigation">
+  <button class="mob-link" data-nav="home">Home</button>
+  <button class="mob-link" data-nav="services">Services</button>
+  <button class="mob-link" data-nav="products">Products</button>
+  <button class="mob-link" data-nav="about">About</button>
+  <button class="mob-link" data-nav="contact">Contact</button>
+  <div class="mob-cta"><button class="btn btn-sun" data-nav="contact">Visit Us</button></div>
+</div>
 
 <main>
 
@@ -563,15 +584,15 @@ h2.title{font-size:clamp(2rem,5.5vw,3.3rem);font-weight:900;letter-spacing:-.01e
 <footer class="footer">
   <div class="wrap footer-grid">
     <div>
-      <a class="brand" data-nav="home" style="color:#fff"><span class="dot"></span><span>Body Works<small>Tanning &middot; Tuscaloosa</small></span></a>
+      <a href="#" class="brand" data-nav="home" style="color:#fff"><span class="dot"></span><span>Body Works<small>Tanning &middot; Tuscaloosa</small></span></a>
       <p style="margin-top:14px;max-width:34ch">Your local tanning salon in Tuscaloosa, Alabama. UV beds, spray tans, lotions, drinks &amp; Bama tees.</p>
       <div class="socials">
         <a href="https://www.instagram.com/bodyworkstanningsalon/" target="_blank" rel="noopener" aria-label="Instagram" title="Body Works on Instagram"><svg viewBox="0 0 24 24"><path d="M12 2.2c3.2 0 3.6 0 4.9.07 1.2.06 1.8.25 2.2.42.6.22 1 .48 1.4.9.42.4.68.8.9 1.4.17.4.36 1 .42 2.2.07 1.3.07 1.7.07 4.9s0 3.6-.07 4.9c-.06 1.2-.25 1.8-.42 2.2-.22.6-.48 1-.9 1.4-.4.42-.8.68-1.4.9-.4.17-1 .36-2.2.42-1.3.07-1.7.07-4.9.07s-3.6 0-4.9-.07c-1.2-.06-1.8-.25-2.2-.42-.6-.22-1-.48-1.4-.9-.42-.4-.68-.8-.9-1.4-.17-.4-.36-1-.42-2.2C2.2 15.6 2.2 15.2 2.2 12s0-3.6.07-4.9c.06-1.2.25-1.8.42-2.2.22-.6.48-1 .9-1.4.4-.42.8-.68 1.4-.9.4-.17 1-.36 2.2-.42C8.4 2.2 8.8 2.2 12 2.2Zm0 4.85A4.95 4.95 0 1 1 7.05 12 4.95 4.95 0 0 1 12 7.05Zm0 8.16A3.21 3.21 0 1 0 8.79 12 3.21 3.21 0 0 0 12 15.21Zm6.3-8.36a1.16 1.16 0 1 1-1.15-1.15 1.16 1.16 0 0 1 1.15 1.15Z"/></svg></a>
         <a href="https://www.facebook.com/bodyworkstuscaloosa/" target="_blank" rel="noopener" aria-label="Facebook" title="Body Works on Facebook"><svg viewBox="0 0 24 24"><path d="M22 12a10 10 0 1 0-11.56 9.88v-6.99H7.9V12h2.54V9.8c0-2.5 1.49-3.89 3.78-3.89 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56V12h2.78l-.44 2.89h-2.34v6.99A10 10 0 0 0 22 12Z"/></svg></a>
       </div>
     </div>
-    <div><h4>Services</h4><a data-nav="services">UV Tanning</a><a data-nav="services">Spray Tans</a><a data-nav="services">Teeth Whitening</a><a data-nav="products">Products</a></div>
-    <div><h4>Company</h4><a data-nav="home">Home</a><a data-nav="about">About Us</a><a data-nav="products">Products</a><a data-nav="contact">Contact</a></div>
+    <div><h4>Services</h4><a href="#" data-nav="services">UV Tanning</a><a href="#" data-nav="services">Spray Tans</a><a href="#" data-nav="services">Teeth Whitening</a><a href="#" data-nav="products">Products</a></div>
+    <div><h4>Company</h4><a href="#" data-nav="home">Home</a><a href="#" data-nav="about">About Us</a><a href="#" data-nav="products">Products</a><a href="#" data-nav="contact">Contact</a></div>
     <div><h4>Visit</h4>
       <div class="addr">513 Queen City Ave<br>Tuscaloosa, AL 35401</div>
       <a href="tel:+12057592039">(205) 759-2039</a>
@@ -586,22 +607,33 @@ h2.title{font-size:clamp(2rem,5.5vw,3.3rem);font-weight:900;letter-spacing:-.01e
 
 <script>
 (function(){
-  var burger=document.querySelector('.burger'), links=document.querySelector('.nav-links');
-  function closeMenu(){if(links)links.classList.remove('open');if(burger){burger.classList.remove('open');burger.setAttribute('aria-expanded','false');}}
-  if(burger&&links){burger.addEventListener('click',function(){var o=links.classList.toggle('open');burger.classList.toggle('open',o);burger.setAttribute('aria-expanded',o?'true':'false');});}
+  var burger=document.querySelector('.burger'), mobMenu=document.getElementById('mobMenu');
+  function closeMenu(){
+    if(mobMenu)mobMenu.classList.remove('open');
+    if(burger){burger.classList.remove('open');burger.setAttribute('aria-expanded','false');}
+  }
+  if(burger&&mobMenu){
+    burger.addEventListener('click',function(){
+      var o=mobMenu.classList.toggle('open');
+      burger.classList.toggle('open',o);
+      burger.setAttribute('aria-expanded',o?'true':'false');
+    });
+  }
 
   function revealIn(scope){(scope||document).querySelectorAll('.reveal').forEach(function(el){el.classList.add('in');});}
   function show(id){
     var el=document.getElementById(id); if(!el)return;
     document.querySelectorAll('.page').forEach(function(p){p.classList.toggle('active',p.id===id);});
-    document.querySelectorAll('.nav-links a').forEach(function(a){a.classList.toggle('active',a.getAttribute('data-nav')===id&&!a.classList.contains('btn'));});
+    document.querySelectorAll('.nav-links a, .mob-link').forEach(function(a){
+      a.classList.toggle('active', a.getAttribute('data-nav')===id && !a.classList.contains('btn'));
+    });
     closeMenu();
     window.scrollTo({top:0,behavior:'smooth'});
     revealIn(el);
     history.replaceState(null,'','#'+id);
   }
-  document.querySelectorAll('[data-nav]').forEach(function(a){
-    a.addEventListener('click',function(e){e.preventDefault();show(this.getAttribute('data-nav'));});
+  document.querySelectorAll('[data-nav]').forEach(function(el){
+    el.addEventListener('click',function(e){e.preventDefault();show(this.getAttribute('data-nav'));});
   });
 
   document.querySelectorAll('.filter').forEach(function(btn){
